@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# INPUT VIARBALES
 APPNAME=$1
 CURRENT_VER=$2
 CH_ADDRESS=$3
@@ -13,11 +14,12 @@ HTTP_HEADER_VALUE=$7
 # debug string
 echo "appname - $APPNAME, current_ver = $CURRENT_VER, ch_addr = $CH_ADDRESS, ch_login = $CH_LOGIN, http_header = $HTTP_HEADER_NAME"
 
+
 # CHECK EXIST  APP
-APP_EXIST_RESULT=$(echo "SELECT appname FROM cicd.appversion FINAL WHERE appname = '$APPNAME'" | curl --silen -H 
-"$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS 
---data-binary "@-")
+APP_EXIST_RESULT=$(echo "SELECT appname FROM cicd.appversion FINAL WHERE appname = '$APPNAME'" | curl --silen -X POST -H 
+"$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-")
 echo "Check status $APP_EXIST_RESULT"
+
 
 
 if [ -z "$APP_EXIST_RESULT" ]
