@@ -25,22 +25,18 @@ echo "Check status $APP_EXIST_RESULT"
 if [ -z "$APP_EXIST_RESULT" ]
 then
     echo "application not exist"
-    echo "INSERT INTO cicd.appversion (appname, version, build_count, username) VALUES ('$APPNAME', '$CURRENT_VER', '0', 
-'$GITLAB_USER_NAME')" | curl -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-"
+    echo "INSERT INTO cicd.appversion (appname, version, build_count, username) VALUES ('$APPNAME', '$CURRENT_VER', '0', '$GITLAB_USER_NAME')" | curl -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-"
 else
     echo "check exist version"
-    VERSION_RESULT=$(echo "SELECT version FROM cicd.appversion FINAL WHERE appname = '$APPNAME'  and version ='$CURRENT_VER'" | curl --silen 
--H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-")
+    VERSION_RESULT=$(echo "SELECT version FROM cicd.appversion FINAL WHERE appname = '$APPNAME'  and version ='$CURRENT_VER'" | curl --silen -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-")
     echo "check old version result: old version = $VERSION_RESULT, current version = $CURRENT_VER "
     if [ "$VERSION_RESULT" != "$CURRENT_VER" ]
         then
            echo "add new version $CURRENT_VER"
-           echo "INSERT INTO cicd.appversion (appname, version, build_count, username) VALUES ('$APPNAME', '$CURRENT_VER', '0', 
-'$GITLAB_USER_NAME')" | curl -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-"
+           echo "INSERT INTO cicd.appversion (appname, version, build_count, username) VALUES ('$APPNAME', '$CURRENT_VER', '0', '$GITLAB_USER_NAME')" | curl -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-"
         else
             echo "version = $VERSION_RESULT"
-            BUILD_COUNT_RESULT=$(echo "SELECT build_count FROM cicd.appversion FINAL WHERE appname = '$APPNAME' and version 
-='$VERSION_RESULT'  " | curl --silen -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary 
+            BUILD_COUNT_RESULT=$(echo "SELECT build_count FROM cicd.appversion FINAL WHERE appname = '$APPNAME' and version ='$VERSION_RESULT'  " | curl --silen -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary 
 "@-")
             echo "Build count = $BUILD_COUNT_RESULT"
         if [ -z "$BUILD_COUNT_RESULT" ]
@@ -50,9 +46,7 @@ else
                 NEW_BUILD_COUNT=$((BUILD_COUNT_RESULT+1))
                 echo "New build count = $NEW_BUILD_COUNT"
                 echo "add new version $VERSION_RESULT.$NEW_BUILD_COUNT"
-                echo "INSERT INTO cicd.appversion (appname, version, build_count, username) VALUES ('$APPNAME', '$VERSION_RESULT', 
-'$NEW_BUILD_COUNT', '$GITLAB_USER_NAME')" | curl -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS 
---data-binary "@-"
+                echo "INSERT INTO cicd.appversion (appname, version, build_count, username) VALUES ('$APPNAME', '$VERSION_RESULT', '$NEW_BUILD_COUNT', '$GITLAB_USER_NAME')" | curl -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-"
             fi
         fi
 fi
