@@ -23,6 +23,9 @@ fi
 # debug string
 echo "appname - $APPNAME, current_ver = $CURRENT_VER, ch_addr = $CH_ADDRESS, ch_login = $CH_LOGIN, http_header = $HTTP_HEADER_NAME"
 
-VERSION_RESULT=$(echo "SELECT version FROM cicd.appversion FINAL WHERE appname = '$APPNAME'  and version ='$CURRENT_VER'" | curl --silen -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-")
-echo "check old version result: old version = $VERSION_RESULT, current version = $CURRENT_VER"
+CURRENT_VERSION_OUTPUT=$(echo "SELECT version FROM cicd.appversion FINAL WHERE appname = '$APPNAME'  and version ='$CURRENT_VER'" | curl --silen -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-")
+CURRENT_BUILD_OUTPUT=$(echo "SELECT build_count FROM cicd.appversion FINAL WHERE appname = '$APPNAME'  and version ='$CURRENT_VER'" | curl --silen -H "$HTTP_HEADER_NAME:$HTTP_HEADER_VALUE" -X POST  https://$CH_LOGIN:$CH_PASS@$CH_ADDRESS --data-binary "@-")
+
+FULL_VERSION_RESULT="$CURRENT_VERSION_OUTPUT.$CURRENT_BUILD_OUTPUT"
+echo $FULL_VERSION_RESULT
 
