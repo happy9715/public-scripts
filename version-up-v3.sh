@@ -11,6 +11,15 @@ HTTP_HEADER_NAME=$6
 HTTP_HEADER_VALUE=$7
 
 
+if [ -z "$CI_COMMIT_TAG" ]
+then
+    CURRENT_VER=$2
+    echo "tag not set current version = $CURRENT_VER"
+else
+    CURRENT_VER=$CI_COMMIT_TAG
+    echo "tag SET current version = $CURRENT_VER"
+fi
+
 # debug string
 echo "appname - $APPNAME, current_ver = $CURRENT_VER, ch_addr = $CH_ADDRESS, ch_login = $CH_LOGIN, http_header = $HTTP_HEADER_NAME"
 
