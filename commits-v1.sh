@@ -9,8 +9,15 @@ CH_PASS=$4
 HTTP_HEADER_NAME=$5
 HTTP_HEADER_VALUE=$6
 
-### for brnahc
-BRANCH=$CI_COMMIT_BRANCH
+### for branch
+####BRANCH=$CI_COMMIT_BRANCH
+if [ -z "$CI_COMMIT_TAG" ]
+then
+    BRANCH=$CI_COMMIT_BRANCH
+else
+    BRANCH=$CI_COMMIT_TAG
+fi
+
 
 # debug string
 #echo "appname - $APPNAME, branch = $BRANCH, ch_addr = $CH_ADDRESS, ch_login = $CH_LOGIN, http_header = $HTTP_HEADER_NAME"
